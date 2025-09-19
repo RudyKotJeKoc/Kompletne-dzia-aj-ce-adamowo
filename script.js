@@ -451,18 +451,7 @@ const I18nManager = {
     },
     
     updateModals() {
-        this.updateElement('#note-modal-title', 'notes.title');
-        this.updateElement('label[for="note-date"]', 'notes.date');
-        this.updateElement('label[for="note-name"]', 'notes.name');
-        this.updateElement('label[for="note-text"]', 'notes.text');
-        this.updateElement('#modal-close-btn', 'notes.close');
-        
-        // Update note form placeholders
-        const nameInput = Utils.$('#note-name');
-        if (nameInput) nameInput.placeholder = this.t('notes.namePlaceholder');
-        
-        const textInput = Utils.$('#note-text');
-        if (textInput) textInput.placeholder = this.t('notes.textPlaceholder');
+        // Removed note modal functionality
     },
     
     updateFAB() {
@@ -808,39 +797,8 @@ const UIManager = {
     },
     
     setupModalHandlers() {
-        // Calendar / Note modal compatibility with current HTML
-        const noteModal = Utils.find('#note-modal', '#calendar-modal', '#modal');
-        const noteForm = Utils.find('#note-form', '#modal-note-form', '#modal-note-form');
-        const modalCloseBtn = Utils.find('#modal-close-btn', '.modal-content .close-btn');
-
-        if (modalCloseBtn) {
-            modalCloseBtn.addEventListener('click', () => {
-                this.closeModal();
-            });
-        }
-
-        if (noteForm) {
-            noteForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleNoteSubmission();
-            });
-        }
-
-        // Close modal on backdrop click
-        if (noteModal) {
-            noteModal.addEventListener('click', (e) => {
-                if (e.target === noteModal) {
-                    this.closeModal();
-                }
-            });
-        }
-        
-        // Close modal on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && AppState.isModalOpen) {
-                this.closeModal();
-            }
-        });
+        // Removed note modal functionality
+    }
     },
     
     setupNavigationHandlers() {
@@ -948,93 +906,6 @@ const UIManager = {
         }
         
         Utils.showToast(I18nManager.t('easterEgg.title'), 'success');
-    },
-    
-    openModal(modalId = 'note-modal') {
-        const modal = Utils.find(`#${modalId}`, '#calendar-modal', '#modal');
-        if (modal) {
-            modal.classList.remove('hidden');
-            AppState.isModalOpen = true;
-
-            // Set current date into calendar input if present
-            const dateInput = Utils.find('#note-date', '#calendar-input', '#modal-date');
-            if (dateInput && 'value' in dateInput) {
-                dateInput.value = new Date().toISOString().split('T')[0];
-            }
-
-            // Focus first input
-            const firstInput = modal.querySelector('input, textarea');
-            if (firstInput) {
-                setTimeout(() => firstInput.focus(), 100);
-            }
-        }
-    },
-    
-    closeModal() {
-        const modal = Utils.find('#note-modal', '#calendar-modal', '#modal');
-        if (modal) {
-            modal.classList.add('hidden');
-            AppState.isModalOpen = false;
-
-            // Reset form (support multiple possible ids)
-            const form = Utils.find('#note-form', '#modal-note-form', '#modal-note-form');
-            if (form) form.reset();
-        }
-    },
-    
-    handleNoteSubmission() {
-        // Support the modal fields available in current HTML
-        const dateInput = Utils.find('#note-date', '#calendar-input', '#modal-date');
-        const nameInput = Utils.find('#note-name', '#modal-name-input');
-        const textInput = Utils.find('#note-text', '#modal-note-input');
-
-        const noteData = {
-            date: dateInput ? dateInput.value : new Date().toISOString().split('T')[0],
-            name: nameInput ? (nameInput.value || 'Anonimowy') : 'Anonimowy',
-            category: null,
-            text: textInput ? (textInput.value || '') : '',
-            mood: Utils.$('.mood-btn-form.active')?.dataset.mood || 'neutral'
-        };
-
-        // Basic validation before saving
-        if (!noteData.text || noteData.text.length < 3) {
-            Utils.showToast(I18nManager.t('common.error') + ': ' + 'Treść notatki jest za krótka.', 'error');
-            return;
-        }
-
-        // Try to send to server if CSRF token available; otherwise fallback to localStorage
-        if (CSRFManager.token) {
-            fetch('/add_comment.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': CSRFManager.token
-                },
-                body: JSON.stringify({ date: noteData.date, name: noteData.name, text: noteData.text, csrf_token: CSRFManager.token })
-            }).then(async res => {
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
-                    throw new Error(err.message || 'Server error');
-                }
-                return res.json();
-            }).then(json => {
-                Utils.showToast(I18nManager.t('common.success'), 'success');
-                this.closeModal();
-            }).catch(err => {
-                console.warn('Server save failed, falling back to localStorage:', err);
-                const notes = JSON.parse(localStorage.getItem('radio-adamowo-notes') || '[]');
-                notes.push({ ...noteData, timestamp: Date.now(), synced: false });
-                localStorage.setItem('radio-adamowo-notes', JSON.stringify(notes));
-                Utils.showToast(I18nManager.t('common.success'), 'success');
-                this.closeModal();
-            });
-        } else {
-            const notes = JSON.parse(localStorage.getItem('radio-adamowo-notes') || '[]');
-            notes.push({ ...noteData, timestamp: Date.now(), synced: false });
-            localStorage.setItem('radio-adamowo-notes', JSON.stringify(notes));
-            Utils.showToast(I18nManager.t('common.success'), 'success');
-            this.closeModal();
-        }
     },
     
     handleFABAction(action) {

@@ -418,35 +418,6 @@
     "mission": "The platform's goal is education about psychological manipulation. Listen, analyze, protect yourself and others.",
     "disclaimer": "Any similarity of names and places is purely coincidental. The platform is an educational tool and does not replace professional psychological help."
   },
-  "notes": {
-    "title": "📝 Add Reflection Note",
-    "date": "Date",
-    "dateHelp": "Date is automatically set",
-    "name": "Your name (optional)",
-    "namePlaceholder": "How do you want to be called?",
-    "nameHelp": "Anonymity will be maintained",
-    "category": "Experience category",
-    "categories": {
-      "recognition": "I recognized manipulation",
-      "resistance": "I successfully resisted",
-      "learning": "New discovery",
-      "reflection": "Personal reflection",
-      "progress": "Learning progress"
-    },
-    "text": "Your thoughts",
-    "textPlaceholder": "Describe your experience, discovery or reflection...",
-    "textHelp": "Share your thoughts (5-1000 characters)",
-    "mood": "Your mood",
-    "moods": {
-      "empowered": "💪 Empowered",
-      "relieved": "😌 Relieved",
-      "confused": "😕 Confused",
-      "angry": "😠 Angry",
-      "hopeful": "🌟 Hopeful"
-    },
-    "close": "Close",
-    "save": "💾 Save Reflection"
-  },
   "fab": {
     "emergency": {
       "label": "Help",

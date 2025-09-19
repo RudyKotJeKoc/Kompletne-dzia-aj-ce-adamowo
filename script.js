@@ -798,7 +798,6 @@ const UIManager = {
     
     setupModalHandlers() {
         // Removed note modal functionality
-    }
     },
     
     setupNavigationHandlers() {
@@ -967,27 +966,8 @@ const KeyboardManager = {
     }
 };
 
-// ===== NOTES MANAGER =====
-const NotesManager = {
-    init() {
-        this.setupMoodButtons();
-        this.loadSavedNotes();
-    },
-    
-    setupMoodButtons() {
-        Utils.$$('.mood-btn-form').forEach(btn => {
-            btn.addEventListener('click', () => {
-                Utils.$$('.mood-btn-form').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
-    },
-    
-    loadSavedNotes() {
-        const notes = JSON.parse(localStorage.getItem('radio-adamowo-notes') || '[]');
-        console.log(`Loaded ${notes.length} saved notes`);
-    }
-};
+// ===== NOTES MANAGER (REMOVED) =====
+// Notes functionality has been removed as requested
 
 // ===== CHAT SIMULATOR =====
 const ChatSimulator = {
@@ -1521,7 +1501,7 @@ class RadioAdamowoApp {
             SinsGuide.init();
             
             // Initialize interactive components
-            NotesManager.init();
+            // NotesManager removed as requested
             ChatSimulator.init();
             
             // Initialize audio system (after user interaction)

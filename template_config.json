@@ -1,13 +1,14 @@
 {
-  "description": "A modern native HTML or HTML5 project template",
+  "description": "Radio Adamowo - Edukacyjna platforma o manipulacji psychologicznej",
   "required_fields": [],
   "required_files": [
     "index.html",
     "style.css",
-    "script.js"
+    "script.js",
+    "manifest.json"
   ],
   "lang": "HTML",
-  "framework": "HTML5",
-  "name": "html_template",
-  "scene": "default_html_project"
+  "framework": "PWA",
+  "name": "radio_adamowo",
+  "scene": "educational_web_app"
 }

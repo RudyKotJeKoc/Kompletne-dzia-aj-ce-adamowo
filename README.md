@@ -6,7 +6,7 @@ Aplikacja webowa "Radio Adamowo" - edukacyjna platforma o manipulacji psychologi
 
 - **Odtwarzacz muzyki** z 546 utworami w 5 kategoriach
 - **Podcasty edukacyjne** - 16 audycji analitycznych
-- **Interaktywne sekcje** - AI chat, kalendarz notatek
+- **Interaktywne sekcje** - AI chat, symulator manipulacji
 - **PWA** - instalowalna jako aplikacja mobilna
 - **Responsywny design** na wszystkie urządzenia
 

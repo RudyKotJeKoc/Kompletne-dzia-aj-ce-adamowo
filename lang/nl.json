@@ -418,35 +418,6 @@
     "mission": "Het doel van het platform is educatie over psychologische manipulatie. Luister, analyseer, bescherm jezelf en anderen.",
     "disclaimer": "Elke gelijkenis van namen en plaatsen is puur toevallig. Het platform is een educatief hulpmiddel en vervangt geen professionele psychologische hulp."
   },
-  "notes": {
-    "title": "📝 Voeg Reflectie Notitie Toe",
-    "date": "Datum",
-    "dateHelp": "Datum wordt automatisch ingesteld",
-    "name": "Je naam (optioneel)",
-    "namePlaceholder": "Hoe wil je genoemd worden?",
-    "nameHelp": "Anonimiteit wordt gehandhaafd",
-    "category": "Ervaring categorie",
-    "categories": {
-      "recognition": "Ik herkende manipulatie",
-      "resistance": "Ik weerstond succesvol",
-      "learning": "Nieuwe ontdekking",
-      "reflection": "Persoonlijke reflectie",
-      "progress": "Leervoortgang"
-    },
-    "text": "Je gedachten",
-    "textPlaceholder": "Beschrijf je ervaring, ontdekking of reflectie...",
-    "textHelp": "Deel je gedachten (5-1000 karakters)",
-    "mood": "Je stemming",
-    "moods": {
-      "empowered": "💪 Versterkt",
-      "relieved": "😌 Opgelucht",
-      "confused": "😕 Verward",
-      "angry": "😠 Boos",
-      "hopeful": "🌟 Hoopvol"
-    },
-    "close": "Sluiten",
-    "save": "💾 Reflectie Opslaan"
-  },
   "fab": {
     "emergency": {
       "label": "Hulp",

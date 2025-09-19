@@ -418,35 +418,6 @@
     "mission": "Celem platformy jest edukacja na temat manipulacji psychologicznej. Słuchaj, analizuj, chroń siebie i innych.",
     "disclaimer": "Wszelka zbieżność imion i miejsc jest całkowicie przypadkowa. Platforma stanowi narzędzie edukacyjne i nie zastępuje profesjonalnej pomocy psychologicznej."
   },
-  "notes": {
-    "title": "📝 Dodaj Notatkę Refleksji",
-    "date": "Data",
-    "dateHelp": "Data jest automatycznie ustawiona",
-    "name": "Twoje imię (opcjonalne)",
-    "namePlaceholder": "Jak chcesz być nazywany/a?",
-    "nameHelp": "Zostanie zachowana anonimowość",
-    "category": "Kategoria doświadczenia",
-    "categories": {
-      "recognition": "Rozpoznałem/am manipulację",
-      "resistance": "Skutecznie się oparłem/am",
-      "learning": "Nowe odkrycie",
-      "reflection": "Refleksja osobista",
-      "progress": "Postęp w nauce"
-    },
-    "text": "Twoje przemyślenia",
-    "textPlaceholder": "Opisz swoje doświadczenie, odkrycie lub refleksję...",
-    "textHelp": "Podziel się swoimi przemyśleniami (5-1000 znaków)",
-    "mood": "Twój nastrój",
-    "moods": {
-      "empowered": "💪 Wzmocniony",
-      "relieved": "😌 Ulga",
-      "confused": "😕 Zdezorientowany",
-      "angry": "😠 Zły",
-      "hopeful": "🌟 Pełen nadziei"
-    },
-    "close": "Zamknij",
-    "save": "💾 Zapisz Refleksję"
-  },
   "fab": {
     "emergency": {
       "label": "Pomoc",

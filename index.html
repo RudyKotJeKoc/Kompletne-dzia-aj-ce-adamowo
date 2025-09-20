@@ -1183,5 +1183,31 @@
             <button id="easter-egg-close" class="btn-primary">Zamknij</button>
         </div>
     </div>
+
+    <!-- Structured data (allowed via nonce in CSP) -->
+    <script type="application/ld+json" nonce="ra-ld">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Radio Adamowo",
+      "url": "https://radio-adamowo.pl",
+      "description": "Interaktywna platforma edukacyjna o manipulacji psychologicznej i toksycznych relacjach. Doświadcz technik manipulacji w kontrolowanym środowisku i naucz się je rozpoznawać.",
+      "educationalCredentialAwarded": "Certyfikat ukończenia kursu rozpoznawania manipulacji",
+      "sameAs": [
+        "https://www.facebook.com/",
+        "https://www.youtube.com/"
+      ],
+      "offers": {
+        "@type": "Offer",
+        "description": "Bezpłatna edukacja o manipulacji psychologicznej",
+        "price": "0",
+        "priceCurrency": "PLN"
+      },
+      "audience": {
+        "@type": "EducationalAudience",
+        "audienceType": "Osoby dorosłe zainteresowane psychologią i rozpoznawaniem manipulacji"
+      }
+    }
+    </script>
 </body>
 </html>

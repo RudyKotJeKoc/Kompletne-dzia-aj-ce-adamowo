@@ -14,15 +14,25 @@
     <meta property="og:title" content="Radio Adamowo - Najlepsze narzędzie edukacyjne o manipulacji">
     <meta property="og:description" content="Interaktywna platforma gdzie doświadczysz manipulacji na własnej skórze i nauczysz się ją rozpoznawać">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="./public/images/studio/studio-1.png">
+    <meta property="og:image" content="./public/images/favicon.png">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Radio Adamowo - Edukacja przez doświadczenie">
     <meta name="twitter:description" content="Słuchaj szumu prawdy w eterze manipulacji">
     
-    <!-- CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:;">
+    <!-- CSP: harden scripts, keep inline styles for now, add nonce for JSON-LD -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'nonce-ra-ld'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:;">
+    
+    <!-- Canonical + robots -->
+    <link rel="canonical" href="https://radio-adamowo.pl">
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
+    
+    <!-- Resource hints -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- PWA -->
     <link rel="manifest" href="./manifest.json">
@@ -31,8 +41,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Icons -->
-    <link rel="icon" href="./public/images/studio/studio-1.png" type="image/png">
-    <link rel="apple-touch-icon" href="./public/images/studio/studio-1.png">
+    <link rel="icon" href="./public/images/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="./public/images/favicon.png">
     
     <!-- Preloads -->
     <link rel="preload" href="./public/images/studio/studio-1.png" as="image">
@@ -57,7 +67,7 @@
     </div>
 
     <!-- Psychological Pressure Bar -->
-    <div id="pressure-bar" class="pressure-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div id="pressure-bar" class="pressure-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Poziom psychologicznego nacisku">
         <div class="pressure-fill"></div>
         <span class="pressure-label">Poziom Psychologicznego Nacisku: <span id="pressure-value">0</span>%</span>
     </div>
@@ -351,7 +361,7 @@
                             </button>
                         </div>
                         <div class="scenario-stats">
-                            <span class="stat">👥 2,56 użytkowników</span>
+                            <span class="stat">👥 256 użytkowników</span>
                             <span class="stat">⭐ 4.7/5</span>
                         </div>
                     </div>
@@ -561,7 +571,7 @@
                 <button id="live-toggle" class="live-toggle enhanced-toggle" aria-pressed="false">
                     <span class="live-indicator">🔴</span>
                     <span class="live-text">Transmisja na żywo</span>
-                    <span class="live-listeners">1,247 słuchaczy</span>
+                    <span class="live-listeners">247 słuchaczy</span>
                 </button>
             </div>
             
@@ -592,7 +602,7 @@
             <!-- Enhanced Track Info -->
             <div id="track-info" class="track-info enhanced-track-info" aria-live="polite">
                 <div class="track-artwork">
-                    <img id="track-image" src="public/images/studio/studio-1.png" alt="Okładka utworu" class="artwork-image">
+                    <img id="track-image" src="public/images/studio/studio-1.png" alt="Okładka utworu" class="artwork-image" loading="lazy">
                     <div class="artwork-overlay">
                         <div class="visualizer-mini" id="mini-visualizer"></div>
                     </div>
@@ -605,7 +615,7 @@
                         <span class="emotion-tag">🧘 Medytacyjny</span>
                     </div>
                 </div>
-                <div id="track-progress" class="track-progress enhanced-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div id="track-progress" class="track-progress enhanced-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Postęp odtwarzania utworu">
                     <div class="progress-bar"></div>
                     <div class="progress-time">
                         <span id="current-time">0:00</span>
@@ -618,6 +628,9 @@
             <div class="player-controls enhanced-controls" role="group" aria-label="Kontrolki odtwarzacza">
                 <button id="shuffle-btn" class="control-btn" aria-label="Losuj playlistę" title="Shuffle (S)">
                     🔀
+                </button>
+                <button id="repeat-btn" class="control-btn" aria-label="Powtarzaj" title="Repeat (R)">
+                    🔁
                 </button>
                 <button id="prev-btn" class="control-btn" aria-label="Poprzedni utwór" title="Poprzedni (←)" disabled>
                     ⏮
@@ -639,6 +652,10 @@
             
             <!-- Audio Element -->
             <audio id="radio-player" class="audio-player" preload="metadata" aria-label="Odtwarzacz radia">
+                Twoja przeglądarka nie obsługuje odtwarzania audio.
+            </audio>
+            <!-- Add missing podcast player audio element -->
+            <audio id="podcast-player" class="audio-player" preload="metadata" aria-label="Odtwarzacz podcastów">
                 Twoja przeglądarka nie obsługuje odtwarzania audio.
             </audio>
         </section>
@@ -1147,7 +1164,12 @@
     </div>
 
     <!-- Scripts -->
-    <script src="./script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <!-- Load dependencies in correct order -->
+    <script src="./script.js" defer></script>
+    <script src="./script/pwa.js" defer></script>
+    <script src="./script/audioPlayer.js" defer></script>
+    <script src="./script/chatSimulator.js" defer></script>
     
     <!-- Easter Egg: Konami Code -->
     <div id="konami-easter-egg" class="easter-egg-modal hidden">

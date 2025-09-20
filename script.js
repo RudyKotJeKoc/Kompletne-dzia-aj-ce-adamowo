@@ -1,7 +1,7 @@
 // ===== CONFIGURATION =====
 const CONFIG = {
     // Stream configuration - set to empty string to hide live functionality
-    STREAM_URL: '', // 'https://example.com/radio-adamowo/stream.m3u8'
+    STREAM_URL: '', // Zostawiamy puste, ponieważ używamy playlisty
     FALLBACK_URL: '',
     
     // Cache configuration
@@ -14,6 +14,9 @@ const CONFIG = {
     // UI settings
     SCROLL_THRESHOLD: 300,
     ANIMATION_SPEED_MULTIPLIER: 1,
+    
+    // Animation library settings
+    USE_GSAP: true, // GSAP is available for enhanced animations
     
     // Keyboard shortcuts
     SHORTCUTS: {
@@ -42,6 +45,8 @@ const AppState = {
     isPlaying: false,
     isMuted: false,
     currentVolume: 1,
+    // Live mode flag to avoid undefined checks
+    isLiveMode: false,
     
     // Playlist
     playlists: {
@@ -56,6 +61,7 @@ const AppState = {
     currentPlaylist: [],
     currentTrackIndex: 0,
     isShuffled: false,
+    repeatMode: 'none', // 'none', 'one', 'all'
     
     // UI
     animationId: null,
@@ -63,10 +69,6 @@ const AppState = {
     
     // PWA
     deferredPrompt: null,
-    
-    // HLS
-    hls: null,
-    isLiveMode: false,
     
     // i18n
     currentLanguage: CONFIG.DEFAULT_LANGUAGE,
@@ -677,6 +679,37 @@ const Utils = {
     // Check if user prefers reduced motion
     prefersReducedMotion() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    },
+    
+    // GSAP helper function - use GSAP if available, fallback to CSS
+    animate(element, properties, duration = 0.3) {
+        if (typeof gsap !== 'undefined' && CONFIG.USE_GSAP) {
+            return gsap.to(element, { ...properties, duration });
+        } else {
+            // Fallback to CSS transitions
+            if (typeof element === 'string') {
+                element = this.$(element);
+            }
+            if (!element) return;
+            
+            // Apply CSS transition
+            element.style.transition = `all ${duration}s ease-in-out`;
+            
+            // Apply properties
+            Object.keys(properties).forEach(prop => {
+                if (prop === 'x') {
+                    element.style.transform = `translateX(${properties[prop]}px)`;
+                } else if (prop === 'y') {
+                    element.style.transform = `translateY(${properties[prop]}px)`;
+                } else if (prop === 'opacity') {
+                    element.style.opacity = properties[prop];
+                } else if (prop === 'scale') {
+                    element.style.transform = `scale(${properties[prop]})`;
+                } else {
+                    element.style[prop] = properties[prop];
+                }
+            });
+        }
     }
 };
 
@@ -693,6 +726,9 @@ const InfinityController = {
         
         // Set initial speed
         this.setSpeed(CONFIG.ANIMATION_SPEED_MULTIPLIER);
+        
+        // Example of enhanced GSAP animation (when available)
+        this.enhanceWithGSAP(symbol);
     },
     
     setSpeed(multiplier) {
@@ -702,62 +738,22 @@ const InfinityController = {
             const newDuration = baseDuration / multiplier;
             marker.setAttribute('dur', `${newDuration}s`);
         }
-    }
-};
-
-// ===== PWA MANAGER =====
-const PWAManager = {
-    init() {
-        this.setupInstallPrompt();
-        this.registerServiceWorker();
     },
     
-    setupInstallPrompt() {
-        const banner = Utils.$('#pwa-install-banner');
-        const installBtn = Utils.$('#pwa-install-btn');
-        const closeBtn = Utils.$('#pwa-close-btn');
-        
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            AppState.deferredPrompt = e;
-            if (banner) banner.classList.remove('hidden');
-        });
-        
-        if (installBtn) {
-            installBtn.addEventListener('click', async () => {
-                if (AppState.deferredPrompt) {
-                    AppState.deferredPrompt.prompt();
-                    const { outcome } = await AppState.deferredPrompt.userChoice;
-                    if (outcome === 'accepted' && banner) {
-                        banner.classList.add('hidden');
-                    }
-                    AppState.deferredPrompt = null;
-                }
-            });
-        }
-        
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                if (banner) banner.classList.add('hidden');
-            });
-        }
-        
-        // Hide banner after app is installed
-        window.addEventListener('appinstalled', () => {
-            if (banner) banner.classList.add('hidden');
-        });
-    },
-    
-    registerServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('Service Worker registered:', reg.scope))
-                    .catch(err => console.error('Service Worker registration failed:', err));
+    enhanceWithGSAP(symbol) {
+        if (typeof gsap !== 'undefined' && !Utils.prefersReducedMotion()) {
+            // Example: Add subtle breathing effect to the infinity symbol
+            gsap.to(symbol, {
+                scale: 1.05,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "power2.inOut"
             });
         }
     }
 };
+
 
 // ===== UI MANAGER =====
 const UIManager = {
@@ -969,183 +965,6 @@ const KeyboardManager = {
 // ===== NOTES MANAGER (REMOVED) =====
 // Notes functionality has been removed as requested
 
-// ===== CHAT SIMULATOR =====
-const ChatSimulator = {
-    init() {
-        this.setupPersonalitySelector();
-        this.setupChatForm();
-        this.setupSuggestions();
-        this.currentPersonality = 'narcissist';
-    },
-    
-    setupPersonalitySelector() {
-        Utils.$$('.personality-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                Utils.$$('.personality-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                this.currentPersonality = btn.dataset.personality;
-                this.resetChat();
-            });
-        });
-    },
-    
-    setupChatForm() {
-        const chatForm = Utils.$('#chat-form');
-        if (chatForm) {
-            chatForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleChatSubmission();
-            });
-        }
-        
-        const analysisToggle = Utils.$('#analysis-toggle');
-        if (analysisToggle) {
-            analysisToggle.addEventListener('click', () => {
-                analysisToggle.classList.toggle('active');
-                this.toggleAnalysis();
-            });
-        }
-    },
-    
-    setupSuggestions() {
-        Utils.$$('.suggestion-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const input = Utils.$('#chat-input');
-                if (input) {
-                    input.value = this.getSuggestionText(btn.dataset.response);
-                    input.focus();
-                }
-            });
-        });
-    },
-    
-    handleChatSubmission() {
-        const input = Utils.$('#chat-input');
-        if (!input || !input.value.trim()) return;
-        
-        const message = input.value.trim();
-        this.addMessage(message, 'user');
-        input.value = '';
-        
-        // Simulate AI response
-        setTimeout(() => {
-            const response = this.generateAIResponse(message);
-            this.addMessage(response.text, 'ai', response.techniques);
-        }, 1000 + Math.random() * 2000);
-    },
-    
-    addMessage(text, sender, techniques = []) {
-        const container = Utils.$('#chat-container');
-        if (!container) return;
-        
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `chat-message ${sender}`;
-        
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.textContent = sender === 'user' ? '👤' : '🤖';
-        
-        const bubble = document.createElement('div');
-        bubble.className = `chat-bubble ${sender}`;
-        
-        const content = document.createElement('div');
-        content.className = 'message-content';
-        content.textContent = text;
-        
-        bubble.appendChild(content);
-        
-        if (techniques.length > 0) {
-            const analysis = document.createElement('div');
-            analysis.className = 'message-analysis';
-            analysis.innerHTML = `
-                <span class="analysis-tag">💡 ${I18nManager.t('chat.help')}: ${techniques.join(', ')}</span>
-            `;
-            bubble.appendChild(analysis);
-        }
-        
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(bubble);
-        
-        container.appendChild(messageDiv);
-        container.scrollTop = container.scrollHeight;
-    },
-    
-    generateAIResponse(userMessage) {
-        const responses = this.getPersonalityResponses();
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        
-        return {
-            text: randomResponse.text,
-            techniques: randomResponse.techniques
-        };
-    },
-    
-    getPersonalityResponses() {
-        const responses = {
-            narcissist: [
-                {
-                    text: "Widzę, że nie rozumiesz mojej wyjątkowej perspektywy. To normalne - niewiele osób jest na moim poziomie intelektualnym.",
-                    techniques: ["Gaslighting", "Wyższość"]
-                },
-                {
-                    text: "Zawsze wiedziałem, że masz problemy z zrozumieniem złożonych koncepcji. Może powinieneś więcej słuchać, a mniej mówić.",
-                    techniques: ["Podważanie kompetencji", "Gaslighting"]
-                }
-            ],
-            victim: [
-                {
-                    text: "Po tym wszystkim co dla ciebie zrobiłem... Myślałem, że jesteś inny, ale widzę, że też mnie zranisz jak wszyscy.",
-                    techniques: ["Szantaż emocjonalny", "Poczucie winy"]
-                },
-                {
-                    text: "Nikt mnie nie rozumie. Wszyscy mnie opuszczają. Pewnie ty też niedługo odejdziesz...",
-                    techniques: ["Manipulacja współczuciem", "Szantaż emocjonalny"]
-                }
-            ],
-            controller: [
-                {
-                    text: "Myślę, że powinieneś ograniczyć kontakt z tymi osobami. One źle na ciebie wpływają. Tylko ja naprawdę cię rozumiem.",
-                    techniques: ["Izolacja", "Kontrola"]
-                },
-                {
-                    text: "Nie podobają mi się twoje ostatnie decyzje. Jeśli naprawdę mnie kochasz, zmienisz swoje zachowanie.",
-                    techniques: ["Kontrola", "Szantaż emocjonalny"]
-                }
-            ]
-        };
-        
-        return responses[this.currentPersonality] || responses.narcissist;
-    },
-    
-    getSuggestionText(type) {
-        const suggestions = {
-            healthy: "Rozumiem twoją perspektywę, ale nie zgadzam się z tym podejściem.",
-            assertive: "To nie jest w porządku. Proszę, abyś przestał używać takiego tonu.",
-            vulnerable: "Może masz rację... Przepraszam, jeśli cię zawiodłem."
-        };
-        
-        return suggestions[type] || "";
-    },
-    
-    resetChat() {
-        const container = Utils.$('#chat-container');
-        if (container) {
-            // Keep only the intro message
-            const introMessage = container.querySelector('.intro-message');
-            container.innerHTML = '';
-            if (introMessage) {
-                container.appendChild(introMessage);
-            }
-        }
-    },
-    
-    toggleAnalysis() {
-        const analysisElements = Utils.$$('.message-analysis');
-        analysisElements.forEach(el => {
-            el.classList.toggle('hidden');
-        });
-    }
-};
 
 // ===== SINS GUIDE =====
 const SinsGuide = {
@@ -1246,228 +1065,6 @@ const CSRFManager = {
     }
 };
 
-// ===== AUDIO PLAYER =====
-const AudioPlayer = {
-    async init() {
-        this.setupEventListeners();
-        this.checkLiveStreamAvailability();
-    },
-    
-    checkLiveStreamAvailability() {
-        const liveContainer = Utils.$('#live-toggle-container');
-        if (CONFIG.STREAM_URL && CONFIG.STREAM_URL.trim()) {
-            if (liveContainer) liveContainer.classList.remove('hidden');
-            this.setupLiveToggle();
-        } else {
-            if (liveContainer) liveContainer.classList.add('hidden');
-        }
-    },
-    
-    setupLiveToggle() {
-        const liveToggle = Utils.$('#live-toggle');
-        if (!liveToggle) return;
-        
-        liveToggle.addEventListener('click', () => {
-            const isPressed = liveToggle.getAttribute('aria-pressed') === 'true';
-            this.toggleLiveMode(!isPressed);
-        });
-    },
-    
-    toggleLiveMode(enable) {
-        const liveToggle = Utils.$('#live-toggle');
-        if (!liveToggle) return;
-        
-        AppState.isLiveMode = enable;
-        liveToggle.setAttribute('aria-pressed', enable.toString());
-        
-        if (enable) {
-            Utils.showToast(I18nManager.t('common.success'), 'success');
-        } else {
-            Utils.showToast(I18nManager.t('common.success'), 'success');
-        }
-    },
-    
-    async initializeAudio() {
-        if (AppState.isAudioInitialized) return;
-        
-        try {
-            AppState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            
-            if (AppState.audioContext.state === 'suspended') {
-                await AppState.audioContext.resume();
-            }
-            
-            AppState.analyser = AppState.audioContext.createAnalyser();
-            AppState.analyser.fftSize = CONFIG.VISUALIZER_FFT_SIZE;
-            
-            AppState.gainNode = AppState.audioContext.createGain();
-            AppState.gainNode.gain.value = AppState.currentVolume;
-            
-            const audioElement = Utils.$('#radio-player');
-            if (audioElement) {
-                AppState.audioSource = AppState.audioContext.createMediaElementSource(audioElement);
-                AppState.audioSource
-                    .connect(AppState.gainNode)
-                    .connect(AppState.analyser)
-                    .connect(AppState.audioContext.destination);
-            }
-            
-            AppState.isAudioInitialized = true;
-            console.log('Web Audio API initialized successfully');
-            
-            this.enableControls();
-            
-            Utils.showToast(I18nManager.t('common.success'), 'success');
-            
-        } catch (error) {
-            console.error('Could not initialize Web Audio API:', error);
-            Utils.showToast(I18nManager.t('common.error'), 'error');
-        }
-    },
-    
-    setupEventListeners() {
-        const audioElement = Utils.$('#radio-player');
-        if (!audioElement) return;
-        
-        audioElement.addEventListener('play', () => {
-            AppState.isPlaying = true;
-            this.updatePlayButton();
-        });
-        
-        audioElement.addEventListener('pause', () => {
-            AppState.isPlaying = false;
-            this.updatePlayButton();
-        });
-        
-        audioElement.addEventListener('ended', () => {
-            if (!AppState.isLiveMode) {
-                this.next();
-            }
-        });
-        
-        audioElement.addEventListener('timeupdate', () => {
-            this.updateProgress();
-        });
-        
-        audioElement.addEventListener('error', (e) => {
-            console.error('Audio error:', e);
-            this.handleAudioError();
-        });
-        
-        // Control buttons
-        const playPauseBtn = Utils.$('#play-pause-btn');
-        const nextBtn = Utils.$('#next-btn');
-        const prevBtn = Utils.$('#prev-btn');
-        const shuffleBtn = Utils.$('#shuffle-btn');
-        const muteBtn = Utils.$('#mute-btn');
-        
-        if (playPauseBtn) playPauseBtn.addEventListener('click', () => this.togglePlayPause());
-        if (nextBtn) nextBtn.addEventListener('click', () => this.next());
-        if (prevBtn) prevBtn.addEventListener('click', () => this.prev());
-        if (shuffleBtn) shuffleBtn.addEventListener('click', () => this.toggleShuffle());
-        if (muteBtn) muteBtn.addEventListener('click', () => this.toggleMute());
-    },
-    
-    enableControls() {
-        Utils.$$('#play-pause-btn, #next-btn, #prev-btn, #shuffle-btn, #mute-btn').forEach(btn => {
-            if (btn) btn.disabled = false;
-        });
-    },
-    
-    async togglePlayPause() {
-        if (!AppState.isAudioInitialized) return;
-        
-        const audioElement = Utils.$('#radio-player');
-        if (!audioElement) return;
-        
-        if (AppState.audioContext && AppState.audioContext.state === 'suspended') {
-            await AppState.audioContext.resume();
-        }
-        
-        try {
-            if (AppState.isPlaying) {
-                audioElement.pause();
-            } else {
-                await audioElement.play();
-            }
-        } catch (error) {
-            console.error('Playback error', error);
-            Utils.showToast(I18nManager.t('common.error'), 'error');
-        }
-    },
-    
-    next() {
-        Utils.showToast(I18nManager.t('common.success'), 'info');
-    },
-    
-    prev() {
-        Utils.showToast(I18nManager.t('common.success'), 'info');
-    },
-    
-    toggleShuffle() {
-        AppState.isShuffled = !AppState.isShuffled;
-        
-        const shuffleBtn = Utils.$('#shuffle-btn');
-        if (shuffleBtn) {
-            shuffleBtn.style.opacity = AppState.isShuffled ? '1' : '0.6';
-            shuffleBtn.setAttribute('aria-pressed', AppState.isShuffled.toString());
-        }
-        
-        Utils.showToast(AppState.isShuffled ? I18nManager.t('common.success') : I18nManager.t('common.success'), 'info');
-    },
-    
-    toggleMute() {
-        AppState.isMuted = !AppState.isMuted;
-        
-        const audioElement = Utils.$('#radio-player');
-        const muteBtn = Utils.$('#mute-btn');
-        
-        if (audioElement) {
-            audioElement.muted = AppState.isMuted;
-        }
-        
-        if (AppState.gainNode) {
-            AppState.gainNode.gain.value = AppState.isMuted ? 0 : AppState.currentVolume;
-        }
-        
-        if (muteBtn) {
-            muteBtn.textContent = AppState.isMuted ? '🔇' : '🔊';
-            muteBtn.setAttribute('aria-label', AppState.isMuted ? I18nManager.t('radio.controls.mute') : I18nManager.t('radio.controls.mute'));
-        }
-    },
-    
-    updatePlayButton() {
-        const playIcon = Utils.$('#play-icon');
-        const pauseIcon = Utils.$('#pause-icon');
-        
-        if (AppState.isPlaying) {
-            if (playIcon) playIcon.classList.add('hidden');
-            if (pauseIcon) pauseIcon.classList.remove('hidden');
-        } else {
-            if (playIcon) playIcon.classList.remove('hidden');
-            if (pauseIcon) pauseIcon.classList.add('hidden');
-        }
-    },
-    
-    updateProgress() {
-        const audioElement = Utils.$('#radio-player');
-        const progressBar = Utils.$('.progress-bar');
-        
-        if (audioElement && progressBar && !AppState.isLiveMode) {
-            const progress = (audioElement.currentTime / audioElement.duration) * 100;
-            progressBar.style.width = `${progress || 0}%`;
-            
-            const progressContainer = Utils.$('#track-progress');
-            if (progressContainer) {
-                progressContainer.setAttribute('aria-valuenow', Math.round(progress || 0));
-            }
-        }
-    },
-    
-    handleAudioError() {
-        Utils.showToast(I18nManager.t('common.error'), 'error');
-    }
-};
 
 // ===== MAIN APPLICATION =====
 class RadioAdamowoApp {
@@ -1493,17 +1090,18 @@ class RadioAdamowoApp {
             
             // Initialize core components
             InfinityController.init();
-            PWAManager.init();
             UIManager.init();
             KeyboardManager.init();
-            
-            // Initialize content generators
-            SinsGuide.init();
-            
+
             // Initialize interactive components
-            // NotesManager removed as requested
-            ChatSimulator.init();
-            
+            SinsGuide.init();
+            // Ensure chat simulator is wired - add safety check
+            if (typeof ChatSimulator !== 'undefined' && ChatSimulator && typeof ChatSimulator.init === 'function') {
+                ChatSimulator.init();
+            } else {
+                console.warn('ChatSimulator not available - skipping initialization');
+            }
+
             // Initialize audio system (after user interaction)
             this.setupAutoplayOverlay();
             
@@ -1577,7 +1175,6 @@ window.RadioAdamowo = {
     get state() {
         return {
             isPlaying: AppState.isPlaying,
-            isLiveMode: AppState.isLiveMode,
             isShuffled: AppState.isShuffled,
             isMuted: AppState.isMuted,
             currentLanguage: AppState.currentLanguage,
@@ -1587,4 +1184,32 @@ window.RadioAdamowo = {
 };
 
 // ===== INITIALIZE APPLICATION =====
-new RadioAdamowoApp();
+document.addEventListener("DOMContentLoaded", function () {
+    // Wait for GSAP to be available if it's being loaded
+    const initApp = () => {
+        new RadioAdamowoApp();
+    };
+    
+    // Check if GSAP is available and wait for it if needed
+    if (typeof gsap === 'undefined' && document.querySelector('script[src*="gsap"]')) {
+        // GSAP is being loaded but not yet available
+        const checkGSAP = setInterval(() => {
+            if (typeof gsap !== 'undefined') {
+                clearInterval(checkGSAP);
+                initApp();
+            }
+        }, 50);
+        
+        // Fallback timeout - initialize even without GSAP after 2 seconds
+        setTimeout(() => {
+            clearInterval(checkGSAP);
+            if (typeof gsap === 'undefined') {
+                console.warn('GSAP not loaded, continuing without it');
+            }
+            initApp();
+        }, 2000);
+    } else {
+        // GSAP is available or not being loaded, initialize immediately
+        initApp();
+    }
+});

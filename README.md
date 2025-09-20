@@ -9,6 +9,7 @@ Aplikacja webowa "Radio Adamowo" - edukacyjna platforma o manipulacji psychologi
 - **Interaktywne sekcje** - AI chat, symulator manipulacji
 - **PWA** - instalowalna jako aplikacja mobilna
 - **Responsywny design** na wszystkie urządzenia
+- **Zaawansowane animacje** - GSAP 3.12.2 dla płynnych przejść
 
 ## 📁 Struktura plików
 
@@ -47,10 +48,20 @@ Aplikacja webowa "Radio Adamowo" - edukacyjna platforma o manipulacji psychologi
 ## 📱 PWA
 
 Aplikacja obsługuje Progressive Web App:
+
 - Instalowalna na urządzeniach mobilnych
 - Działanie offline (cache)
 - Powiadomienia push
 - Kontrola multimediów z poziomu systemu
+
+## 🛠️ Technologie
+
+- **Frontend**: HTML5, CSS3, Vanilla JavaScript
+- **Animacje**: GSAP 3.12.2 (załadowane z CDN)
+- **PWA**: Service Worker, Web App Manifest
+- **Audio**: Web Audio API, HTML5 Audio
+- **Stylowanie**: CSS Custom Properties, Flexbox, Grid
+- **Internacjonalizacja**: JSON-based i18n (PL/EN/NL)
 
 ## 🔧 Wymagania serwera
 
@@ -63,6 +74,7 @@ Aplikacja obsługuje Progressive Web App:
 ## 📞 Wsparcie
 
 W przypadku problemów technicznych sprawdź:
+
 1. Czy wszystkie pliki zostały wgrane
 2. Czy serwer obsługuje pliki .htaccess
 3. Czy MIME types są poprawnie skonfigurowane

@@ -14,7 +14,7 @@
     <meta property="og:title" content="Radio Adamowo - Najlepsze narzędzie edukacyjne o manipulacji">
     <meta property="og:description" content="Interaktywna platforma gdzie doświadczysz manipulacji na własnej skórze i nauczysz się ją rozpoznawać">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="public/images/studio/studio-1.png">
+    <meta property="og:image" content="./public/images/studio/studio-1.png">
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -25,22 +25,22 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self' https:; connect-src 'self' https:;">
     
     <!-- PWA -->
-    <link rel="manifest" href="/assets/manifest-Di-7Sj9P.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#f59e0b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Icons -->
-    <link rel="icon" href="public/images/studio/studio-1.png" type="image/png">
-    <link rel="apple-touch-icon" href="public/images/studio/studio-1.png">
+    <link rel="icon" href="./public/images/studio/studio-1.png" type="image/png">
+    <link rel="apple-touch-icon" href="./public/images/studio/studio-1.png">
     
     <!-- Preloads -->
-    <link rel="preload" href="public/images/studio/studio-1.png" as="image">
+    <link rel="preload" href="./public/images/studio/studio-1.png" as="image">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Inter:wght@300;400;500;600;700&display=swap" as="style">
     
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" crossorigin href="/assets/index-CPBVpC1P.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body class="bg-gray-900 text-gray-300" data-manipulation-level="0" data-user-resistance="unknown">
     
@@ -1114,73 +1114,7 @@
         </div>
     </div>
 
-    <!-- Note Modal (Enhanced) -->
-    <div id="note-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="note-modal-title">
-        <div class="modal-content">
-            <form id="note-form" class="note-form">
-                <h3 id="note-modal-title" class="modal-title">📝 Dodaj Notatkę Refleksji</h3>
-                
-                <div class="form-group">
-                    <label for="note-date" class="form-label">Data</label>
-                    <input type="date" id="note-date" class="form-input" readonly aria-describedby="note-date-help">
-                    <p id="note-date-help" class="form-help">Data jest automatycznie ustawiona</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="note-name" class="form-label">Twoje imię (opcjonalne)</label>
-                    <input type="text" id="note-name" class="form-input" 
-                           placeholder="Jak chcesz być nazywany/a?" 
-                           maxlength="50" 
-                           aria-describedby="note-name-help">
-                    <p id="note-name-help" class="form-help">Zostanie zachowana anonimowość</p>
-                </div>
-                
-                <div class="form-group">
-                    <label for="note-category" class="form-label">Kategoria doświadczenia</label>
-                    <select id="note-category" class="form-input">
-                        <option value="recognition">Rozpoznałem/am manipulację</option>
-                        <option value="resistance">Skutecznie się oparłem/am</option>
-                        <option value="learning">Nowe odkrycie</option>
-                        <option value="reflection">Refleksja osobista</option>
-                        <option value="progress">Postęp w nauce</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="note-text" class="form-label">Twoje przemyślenia</label>
-                    <textarea id="note-text" class="form-textarea" 
-                              placeholder="Opisz swoje doświadczenie, odkrycie lub refleksję..." 
-                              rows="5" 
-                              maxlength="1000" 
-                              required
-                              aria-describedby="note-text-help"></textarea>
-                    <p id="note-text-help" class="form-help">Podziel się swoimi przemyśleniami (5-1000 znaków)</p>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Twój nastrój</label>
-                    <div class="mood-selector-form">
-                        <button type="button" class="mood-btn-form" data-mood="empowered">💪 Wzmocniony</button>
-                        <button type="button" class="mood-btn-form" data-mood="relieved">😌 Ulga</button>
-                        <button type="button" class="mood-btn-form" data-mood="confused">😕 Zdezorientowany</button>
-                        <button type="button" class="mood-btn-form" data-mood="angry">😠 Zły</button>
-                        <button type="button" class="mood-btn-form" data-mood="hopeful">🌟 Pełen nadziei</button>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" id="modal-close-btn" class="btn-secondary">
-                        Zamknij
-                    </button>
-                    <button type="submit" class="btn-primary">
-                        💾 Zapisz Refleksję
-                    </button>
-                </div>
-                
-                <div id="note-feedback" class="form-feedback" aria-live="polite"></div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Back to Top (Enhanced) -->
     <button id="back-to-top" class="back-to-top enhanced-back-to-top hidden" aria-label="Wróć na górę strony" title="Wróć na górę (Home)">
@@ -1213,7 +1147,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
     
     <!-- Easter Egg: Konami Code -->
     <div id="konami-easter-egg" class="easter-egg-modal hidden">

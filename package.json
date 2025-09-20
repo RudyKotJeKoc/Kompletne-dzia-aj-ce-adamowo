@@ -1,15 +1,15 @@
 {
-  "name": "html-template",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "radio-adamowo",
+  "version": "2.0.0",
+  "description": "Edukacyjna platforma o manipulacji psychologicznej i toksycznych relacjach",
+  "main": "index.html",
   "scripts": {
     "dev": "vite --mode dev",
     "build": "vite build",
     "lint": "echo 'linted'"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["radio", "education", "psychology", "manipulation", "awareness"],
+  "author": "Radio Adamowo",
   "license": "ISC",
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {

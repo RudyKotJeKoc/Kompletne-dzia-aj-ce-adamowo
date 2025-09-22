@@ -296,6 +296,7 @@
     "title": "📚 Interaktywny Poradnik: 8 Grzechów",
     "intro": "Poznaj najczęstsze techniki toksycznych osób. Kliknij każdy grzech aby zobaczyć przykłady i nauczyć się obrony.",
     "progress": "Postęp nauki:",
+    "exampleLabel": "Przykład",
     "sins": {
       "sin1": {
         "title": "Grzech 1: Branie pieniędzy z instytucji zamiast prawdziwej pomocy",

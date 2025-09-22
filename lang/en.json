@@ -296,6 +296,7 @@
     "title": "📚 Interactive Guide: 8 Sins",
     "intro": "Learn the most common techniques of toxic people. Click each sin to see examples and learn defense.",
     "progress": "Learning progress:",
+    "exampleLabel": "Example",
     "sins": {
       "sin1": {
         "title": "Sin 1: Taking money from institutions instead of real help",
